@@ -1,0 +1,266 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		06D8ED7B194EA4D600ACBD20 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06D8ED7A194EA4D600ACBD20 /* main.cpp */; };
+		06D8ED86194EA4F300ACBD20 /* lodepng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06D8ED84194EA4F300ACBD20 /* lodepng.cpp */; };
+		06D8ED8A194EA9E300ACBD20 /* Circuit_2To4Decoder_v3.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06D8ED88194EA53500ACBD20 /* Circuit_2To4Decoder_v3.png */; };
+		06D8ED8B194EA9E500ACBD20 /* Circuit_2To4Decoder_v2.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06D8ED89194EA53500ACBD20 /* Circuit_2To4Decoder_v2.png */; };
+		06D8ED8E19565DAE00ACBD20 /* WireSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06D8ED8C19565DAE00ACBD20 /* WireSim.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		06D8ED75194EA4D600ACBD20 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				06D8ED8A194EA9E300ACBD20 /* Circuit_2To4Decoder_v3.png in CopyFiles */,
+				06D8ED8B194EA9E500ACBD20 /* Circuit_2To4Decoder_v2.png in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		06D8ED77194EA4D600ACBD20 /* WireSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WireSim; sourceTree = BUILT_PRODUCTS_DIR; };
+		06D8ED7A194EA4D600ACBD20 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		06D8ED84194EA4F300ACBD20 /* lodepng.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lodepng.cpp; sourceTree = "<group>"; };
+		06D8ED85194EA4F300ACBD20 /* lodepng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lodepng.h; sourceTree = "<group>"; };
+		06D8ED88194EA53500ACBD20 /* Circuit_2To4Decoder_v3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Circuit_2To4Decoder_v3.png; sourceTree = "<group>"; };
+		06D8ED89194EA53500ACBD20 /* Circuit_2To4Decoder_v2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Circuit_2To4Decoder_v2.png; sourceTree = "<group>"; };
+		06D8ED8C19565DAE00ACBD20 /* WireSim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WireSim.cpp; sourceTree = "<group>"; };
+		06D8ED8D19565DAE00ACBD20 /* WireSim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireSim.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		06D8ED74194EA4D600ACBD20 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		06D8ED6E194EA4D600ACBD20 = {
+			isa = PBXGroup;
+			children = (
+				06D8ED87194EA51100ACBD20 /* Circuits */,
+				06D8ED83194EA4E100ACBD20 /* LodePng */,
+				06D8ED79194EA4D600ACBD20 /* WireSim */,
+				06D8ED78194EA4D600ACBD20 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		06D8ED78194EA4D600ACBD20 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				06D8ED77194EA4D600ACBD20 /* WireSim */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		06D8ED79194EA4D600ACBD20 /* WireSim */ = {
+			isa = PBXGroup;
+			children = (
+				06D8ED8C19565DAE00ACBD20 /* WireSim.cpp */,
+				06D8ED8D19565DAE00ACBD20 /* WireSim.h */,
+				06D8ED7A194EA4D600ACBD20 /* main.cpp */,
+			);
+			path = WireSim;
+			sourceTree = "<group>";
+		};
+		06D8ED83194EA4E100ACBD20 /* LodePng */ = {
+			isa = PBXGroup;
+			children = (
+				06D8ED84194EA4F300ACBD20 /* lodepng.cpp */,
+				06D8ED85194EA4F300ACBD20 /* lodepng.h */,
+			);
+			name = LodePng;
+			sourceTree = "<group>";
+		};
+		06D8ED87194EA51100ACBD20 /* Circuits */ = {
+			isa = PBXGroup;
+			children = (
+				06D8ED88194EA53500ACBD20 /* Circuit_2To4Decoder_v3.png */,
+				06D8ED89194EA53500ACBD20 /* Circuit_2To4Decoder_v2.png */,
+			);
+			name = Circuits;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		06D8ED76194EA4D600ACBD20 /* WireSim */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 06D8ED80194EA4D600ACBD20 /* Build configuration list for PBXNativeTarget "WireSim" */;
+			buildPhases = (
+				06D8ED73194EA4D600ACBD20 /* Sources */,
+				06D8ED74194EA4D600ACBD20 /* Frameworks */,
+				06D8ED75194EA4D600ACBD20 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WireSim;
+			productName = WireSim;
+			productReference = 06D8ED77194EA4D600ACBD20 /* WireSim */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		06D8ED6F194EA4D600ACBD20 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = CoreS2;
+			};
+			buildConfigurationList = 06D8ED72194EA4D600ACBD20 /* Build configuration list for PBXProject "WireSim" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 06D8ED6E194EA4D600ACBD20;
+			productRefGroup = 06D8ED78194EA4D600ACBD20 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				06D8ED76194EA4D600ACBD20 /* WireSim */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		06D8ED73194EA4D600ACBD20 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				06D8ED7B194EA4D600ACBD20 /* main.cpp in Sources */,
+				06D8ED8E19565DAE00ACBD20 /* WireSim.cpp in Sources */,
+				06D8ED86194EA4F300ACBD20 /* lodepng.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		06D8ED7E194EA4D600ACBD20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		06D8ED7F194EA4D600ACBD20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		06D8ED81194EA4D600ACBD20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		06D8ED82194EA4D600ACBD20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		06D8ED72194EA4D600ACBD20 /* Build configuration list for PBXProject "WireSim" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06D8ED7E194EA4D600ACBD20 /* Debug */,
+				06D8ED7F194EA4D600ACBD20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		06D8ED80194EA4D600ACBD20 /* Build configuration list for PBXNativeTarget "WireSim" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06D8ED81194EA4D600ACBD20 /* Debug */,
+				06D8ED82194EA4D600ACBD20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 06D8ED6F194EA4D600ACBD20 /* Project object */;
+}
