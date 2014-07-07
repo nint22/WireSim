@@ -46,39 +46,58 @@
 // Main application entry point
 int main()
 {
-    // Simulation count
-    const int cSimulationCount = 100;
+    // Simulation cycle count
+    const int cMaxSimulationCount = 1000;
+    const int cPixelSize = 8;
     
     // All circuits to simulate
-    const int cPngFileNameCount = 2;
-    const char* cPngFileNames[2] =
+    const int cPngFileNameCount = 1;//9;
+    const char* cPngFileNames[ cPngFileNameCount ] =
     {
-        "Circuit_2To4Decoder_v2.png",
-        "Circuit_2To4Decoder_v3.png",
+        //"StraightWireGreen.png",
+        //"StraightWireOrange.png",
+        //"StraightWires.png",
+        //"WirePair_16Full.png",
+        //"WirePair_128Full.png",
+        "JumpJointTests.png"
+        //"WireOverlap.png",
+        //"Circuit_2To4Decoder_v2.png",
+        //"Circuit_2To4Decoder_v3.png",
     };
     
     for( int i = 0; i < cPngFileNameCount; i++ )
     {
         printf( "Starting simulations for \"%s\":\n", cPngFileNames[ i ] );
         
+        WireSim wireSim( cPngFileNames[ i ] );
+        
         // File name buffer
         char fileName[ 512 ];
         
-        WireSim wireSim( cPngFileNames[ i ] );
-        for( int j = 0; j < cSimulationCount; j++ )
+        // Initial state
+        sprintf( fileName, "%s_000.output.png", cPngFileNames[ i ] );
+        wireSim.SaveState( fileName, cPixelSize );
+        
+        for( int j = 1; j < cMaxSimulationCount; j++ )
         {
             // Testing states
-            if( j == 0 )
+            for( int k = 0; k < wireSim.GetInputCount(); k++ )
             {
-                wireSim.SetInput( 0, 3 );
+                wireSim.SetInput( k, true );
             }
             
-            wireSim.Update();
+            bool hasChanged = wireSim.Update();
             
             sprintf( fileName, "%s_%03d.output.png", cPngFileNames[ i ], j );
-            wireSim.SaveState( fileName );
+            fflush( stdout );
+            wireSim.SaveState( fileName, cPixelSize );
             
-            printf( " %0.1f", 100.0f * ( float(j + 1) / float( cSimulationCount ) ) );
+            printf( " %0.1f%%", 100.0f * ( float(j + 1) / float( cMaxSimulationCount ) ) );
+            
+            if( hasChanged == false )
+            {
+                break;
+            }
         }
         
         printf( " Done!\n" );

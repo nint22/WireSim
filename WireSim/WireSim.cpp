@@ -1,31 +1,87 @@
 /***
-
- WireSim: Esoteric Computer built out of discrete gates, wholly simulated with hand-made images, execute through graphics cards!
  
-***/
+ WireSim - Discrete Circuit Simulated PixelArt
+ Copyright (c) 2014 Jeremy Bridon
+
+ ***/
 
 #include <vector>
 
 #include "lodepng.h"
+#include "Vec2.h"
 #include "WireSim.h"
 
 namespace
 {
     // Color constants; ARGB format
     // Based on Tango Icon Theme; four levels of power color
-    const WireSim::SimColor cSimColors[ WireSim::SimTypeCount ][ 4 ] =
+    // No power, spreading, power, spreading
+    const WireSim::SimColor cSimColors[ WireSim::SimTypeCount ][ WireSim::SimPowerCount ] =
     {
-        // Least power to most power
         { 0x00000000, 0x00000000, 0x00000000, 0x00000000 }, // None-type
-        { 0x00fcaf3e, 0x00f57900, 0x00ce5c00, 0x00c05c00 }, // Wire 0 (Orange)
-        { 0x008ae234, 0x0073d216, 0x004e9a06, 0x00355d04 }, // Wire 1 (Green)
-        { 0x00e9b96e, 0x00c17d11, 0x008f5902, 0x00704502 }, // Jump Joint (Brown)
-        { 0x00fce94f, 0x00edd400, 0x00c4a000, 0x00a78900 }, // Merge joint (Yellow)
-        { 0x00ef2929, 0x00cc0000, 0x00a40000, 0x00700000 }, // And (Red)
-        { 0x00729fcf, 0x003465a4, 0x00204a87, 0x0015325a }, // Or (Blue)
-        { 0x00888a85, 0x00636561, 0x00484845, 0x003a3a38 }, // Xor (Grey)
-        { 0x00ad7fa8, 0x0075507b, 0x005c3566, 0x00482950 }, // Nor (Purple)
+        { 0x00fcaf3e, 0x00fcaf4f, 0x00f57900, 0x00f57911 }, // Wire 0 (Orange)
+        { 0x008ae234, 0x008ae245, 0x004e9a06, 0x004e9a17 }, // Wire 1 (Green)
+        { 0x00e9b96e, 0x00e9b96f, 0x008f5902, 0x008f5903 }, // Jump Joint (Brown)
+        { 0x00fce94f, 0x00fce950, 0x00c4a000, 0x00c4a001 }, // Merge joint (Yellow)
+        { 0x00ef2929, 0x00ef292a, 0x00a40000, 0x00a40001 }, // And (Red)
+        { 0x00729fcf, 0x00729fd0, 0x00204a87, 0x00204a88 }, // Or (Blue)
+        { 0x00888a85, 0x00888a86, 0x00484845, 0x00484846 }, // Xor (Grey)
+        { 0x00ad7fa8, 0x00ad7fa9, 0x005c3566, 0x005c3567 }, // Nor (Purple)
     };
+    
+    // Constants used for iterating over adjacent tiles, etc..
+    
+    // Directly adjacent offsets
+    const int cDirectlyAdjacentOffsetCount = 4;
+    const Vec2 cDirectlyAdjacentOffsets[ cDirectlyAdjacentOffsetCount ] =
+    {
+        Vec2( 2, 1 ), // Right
+        Vec2( 1, 2 ), // Down
+        Vec2( 0, 1 ), // Left
+        Vec2( 1, 0 ), // Top
+    };
+    
+    // All adjacent (corners included)
+    const int cAdjacentOffsetCount = 8;
+    const Vec2 cAdjacentOffsets[ cAdjacentOffsetCount ][ 2 ] =
+    {
+        Vec2( 2, 1 ),
+        Vec2( 1, 2 ),
+        Vec2( 0, 1 ),
+        Vec2( 1, 0 ),
+        Vec2( 0, 0 ),
+        Vec2( 0, 2 ),
+        Vec2( 2, 0 ),
+        Vec2( 2, 2 ),
+    };
+    
+    // All combinations of two-input one output, Y-shape
+    // 4 orientations (top-down, left-right, down-up, right-left), listed { input a, input b, output }[x, y]
+    const int cTernaryOffsetCount = 4;
+    const Vec2 cTernaryOffsets[ cTernaryOffsetCount ][ 3 ][ 2 ] =
+    {
+        { // Top-down
+            Vec2( 0, 0 ),
+            Vec2( 2, 0 ),
+            Vec2( 1, 2 ),
+        },
+        { // Left-right
+            Vec2( 0, 0 ),
+            Vec2( 0, 2 ),
+            Vec2( 2, 1 ),
+        },
+        { // Down-up
+            Vec2( 0, 2 ),
+            Vec2( 2, 2 ),
+            Vec2( 1, 0 ),
+        },
+        { // Right-left
+            Vec2( 2, 0 ),
+            Vec2( 2, 2 ),
+            Vec2( 0, 1 ),
+        },
+    };
+    
 }
 
 WireSim::WireSim( const char* pngFileName )
@@ -57,38 +113,40 @@ WireSim::WireSim( const char* pngFileName )
         m_image.push_back( simColor );
     }
     
-    // Look at the left and right edges for inputs and outputs; just wire-type colors
-    for( int i = 0; i < m_height; i++ )
+    // Every other line
+    for( int y = 0; y < m_height; y += 2 )
     {
-        // Iterate top-down, left comumn then right column
-        int pixelx = 0;
-        if( i >= ( m_height / 2 ) )
+        // Read left and right
+        for( int dx = 0; dx < 2; dx++ )
         {
-            pixelx = m_width - 1;
-        }
-        int pixely = (i * 2) % m_height;
-        
-        SimType simType = SimType_None;
-        int powerOut = 0;
-        GetSimType( pixelx, pixely, simType, powerOut );
-        
-        if( simType == SimType_WireColor0
-         || simType == SimType_WireColor1
-         || simType == SimType_MergeJoint
-         || simType == SimType_JumpJoint )
-        {
-            if( pixelx == 0 )
+            int x = 0;
+            if( dx == 1 )
             {
-                m_inputIndices.push_back( pixely );
+                x = m_width - 1;
             }
-            else
+            
+            SimType simType = SimType_None;
+            SimPower powerOut = SimPower_NoPower;
+            GetSimType( x, y, simType, powerOut );
+            
+            if( simType == SimType_WireColor0
+               || simType == SimType_WireColor1
+               || simType == SimType_MergeJoint
+               || simType == SimType_JumpJoint )
             {
-                m_outputIndices.push_back( pixely );
+                if( dx == 0 )
+                {
+                    m_inputIndices.push_back( y );
+                }
+                else
+                {
+                    m_outputIndices.push_back( y );
+                }
             }
         }
     }
 }
-    
+
 WireSim::~WireSim()
 {
     // Todo: load data into color buffer
@@ -105,15 +163,19 @@ int WireSim::GetInputCount() const
     return (int)m_inputIndices.size();
 }
 
-void WireSim::SetInput( int inputIndex, int powerLevel )
+void WireSim::SetInput( int inputIndex, bool turnOn )
 {
     int pinOffset = m_inputIndices.at( inputIndex );
     
     SimType simType = SimType_None;
-    int unusedPower = 0;
+    SimPower simPower = SimPower_NoPower;
     
-    GetSimType( 0, pinOffset, simType, unusedPower );
-    SetSimType( m_image, 0, pinOffset, simType, powerLevel );
+    GetSimType( 0, pinOffset, simType, simPower );
+    if( ( turnOn && simPower != SimPower_Power && simPower != SimPower_PowerSpreading ) ||
+        ( !turnOn && simPower != SimPower_NoPower && simPower != SimPower_NoPowerSpreading ) )
+    {
+        SetSimType( m_image, 0, pinOffset, simType, turnOn ? SimPower_PowerSpreading : SimPower_NoPowerSpreading );
+    }
 }
 
 int WireSim::GetOutputCount() const
@@ -121,7 +183,7 @@ int WireSim::GetOutputCount() const
     return (int)m_outputIndices.size();
 }
 
-void WireSim::GetOutput( int outputIndex, int& powerLevel ) const
+void WireSim::GetOutput( int outputIndex, SimPower& powerLevel ) const
 {
     int pinOffset = m_outputIndices.at( outputIndex );
     
@@ -129,11 +191,11 @@ void WireSim::GetOutput( int outputIndex, int& powerLevel ) const
     GetSimType( m_width - 1, pinOffset, simType, powerLevel );
 }
 
-void WireSim::Update()
+bool WireSim::Update()
 {
     // Copy source to dest; update, then flip buffer
     std::vector< SimColor > resultImage = m_image;
-
+    
     // For each pixel..
     for( int y = 0; y < m_height; y++ )
     {
@@ -144,7 +206,6 @@ void WireSim::Update()
     }
     
     // Check for differences
-    /*
     int count = 0;
     for( int i = 0; i < (int)resultImage.size(); i++ )
     {
@@ -153,54 +214,72 @@ void WireSim::Update()
             count++;
         }
     }
-    */
     
     // Save to output
     m_image = resultImage;
+    
+    return ( count > 0 );
 }
 
-bool WireSim::GetSimType( const SimColor& givenColor, SimType& simTypeOut, int& powerOut ) const
+bool WireSim::GetSimType( const SimColor& givenColor, SimType& simTypeOut, SimPower& powerOut ) const
 {
     // Linear search
     // Todo: could do a hash for fast lookup
     for( int i = 0; i < (int)SimTypeCount; i++ )
     {
-        for( int j = 0; j < 4; j++ )
+        for( int j = 0; j < SimPowerCount; j++ )
         {
             // Match found!
             if( cSimColors[ i ][ j ] == givenColor )
             {
                 simTypeOut = (SimType)i;
-                powerOut = j;
+                powerOut = (SimPower)j;
                 return true;
             }
         }
     }
-
+    
     // Never found
     return false;
 }
 
-bool WireSim::GetSimType( int x, int y, SimType& simTypeOut, int& powerOut ) const
+bool WireSim::GetSimType( int x, int y, SimType& simTypeOut, SimPower& powerOut ) const
 {
     int linearIndex = GetLinearPosition( x, y );
     return GetSimType( m_image.at( linearIndex ), simTypeOut, powerOut );
 }
 
-bool WireSim::SaveState( const char* pngOutFileName )
+bool WireSim::SaveState( const char* pngOutFileName, int pixelSize )
 {
     // Convert from ARGB to RGBA
     std::vector< unsigned char > outImage;
-    for( int i = 0; i < m_image.size(); i++ )
+    outImage.resize( m_width * m_height * pixelSize * pixelSize * 4 );
+    
+    for( int y = 0; y < m_height; y++ )
     {
-        outImage.push_back( ( m_image.at( i ) & 0x00ff0000 ) >> 16 );
-        outImage.push_back( ( m_image.at( i ) & 0x0000ff00 ) >> 8 );
-        outImage.push_back(   m_image.at( i ) & 0x000000ff );
-        outImage.push_back( 0xFF );
+        for( int x = 0; x < m_width; x++ )
+        {
+            int r = ( ( m_image.at( y * m_width + x ) & 0x00ff0000 ) >> 16 );
+            int g = ( ( m_image.at( y * m_width + x ) & 0x0000ff00 ) >> 8 );
+            int b = (   m_image.at( y * m_width + x ) & 0x000000ff );
+            int a = ( 0xFF );
+            
+            for( int dy = 0; dy < pixelSize; dy++ )
+            {
+                for( int dx = 0; dx < pixelSize; dx++ )
+                {
+                    int index = ( y * pixelSize + dy ) * m_width * pixelSize * 4 + ( x * pixelSize + dx ) * 4;
+                    outImage.at( index + 0 ) = r;
+                    outImage.at( index + 1 ) = g;
+                    outImage.at( index + 2 ) = b;
+                    outImage.at( index + 3 ) = a;
+                }
+            }
+        }
     }
     
     // Write out
-    unsigned int error = lodepng::encode( pngOutFileName, outImage, m_width, m_height );
+    unsigned int error = lodepng::encode( pngOutFileName, outImage, m_width * pixelSize, m_height * pixelSize );
     if( error != 0 )
     {
         printf( "Error encoding\n" );
@@ -229,56 +308,6 @@ inline int WireSim::GetLinearPosition( int x, int y ) const
 
 void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::vector< SimColor >& dest )
 {
-    /*** Position Iterators ***/
-    
-    // Directly adjacent offsets
-    static const int cDirectlyAdjacentOffsets[ 4 ][ 2 ] = {
-        { 2, 1 },
-        { 1, 2 },
-        { 0, 1 },
-        { 1, 0 },
-    };
-    
-    // All adjacent (corners included)
-    static const int cAdjacentOffsets[ 8 ][ 2 ] = {
-        { 2, 1 },
-        { 1, 2 },
-        { 0, 1 },
-        { 1, 0 },
-        { 0, 0 },
-        { 0, 2 },
-        { 2, 0 },
-        { 2, 2 },
-    };
-    
-    // All combinations of two-input one output, Y-shape
-    // 4 orientations (top-down, left-right, down-up, right-left), listed { input a, input b, output }[x, y]
-    static const int cTernaryOffsets[ 4 ][ 3 ][ 2 ] =
-    {
-        { // Top-down
-            { 0, 0 },
-            { 2, 0 },
-            { 1, 2 },
-        },
-        { // Left-right
-            { 0, 0 },
-            { 0, 2 },
-            { 2, 1 },
-        },
-        { // Down-up
-            { 0, 2 },
-            { 2, 2 },
-            { 1, 0 },
-        },
-        { // Right-left
-            { 2, 0 },
-            { 2, 2 },
-            { 0, 1 },
-        },
-    };
-    
-    /*** Cell Simulation ***/
-    
     // Get the 3x3 grid centered on the target
     SimType nodeGrid[ 3 ][ 3 ] = {
         { SimType_None, SimType_None, SimType_None },
@@ -287,10 +316,10 @@ void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::
     };
     
     // Get the 3x3 power levels
-    int powerGrid[ 3 ][ 3 ] = {
-        { 0, 0, 0 },
-        { 0, 0, 0 },
-        { 0, 0, 0 },
+    SimPower powerGrid[ 3 ][ 3 ] = {
+        { SimPower_NoPower, SimPower_NoPower, SimPower_NoPower },
+        { SimPower_NoPower, SimPower_NoPower, SimPower_NoPower },
+        { SimPower_NoPower, SimPower_NoPower, SimPower_NoPower },
     };
     
     for( int dx = -1; dx <= 1; dx++ )
@@ -304,23 +333,26 @@ void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::
         }
     }
     
-    // Each node loses power, but gets simulated if highest power
-    int powerLevel = powerGrid[ 1 ][ 1 ];
-    if( powerLevel <= 0 )
+    // Alias for tile we're simulating
+    const SimType& centerType = nodeGrid[ 1 ][ 1 ];
+    SimPower centerPower = powerGrid[ 1 ][ 1 ];
+    
+    // Ignore if undefined simulation tile
+    if( centerType == SimType_None )
     {
         return;
     }
     
-    SimType centerType = nodeGrid[ 1 ][ 1 ];
-    if( centerType != SimType_None )
+    // Settle the power state on this node
+    if( centerPower == SimPower_PowerSpreading )
     {
-        SetSimType( dest, x, y, centerType, powerLevel - 1 );
+        centerPower = SimPower_Power;
+        SetSimType( dest, x, y, centerType, SimPower_Power );
     }
-    
-    // Only continue simulation if 3
-    if( powerLevel != 3 )
+    else if( centerPower == SimPower_NoPowerSpreading )
     {
-        return;
+        centerPower = SimPower_NoPower;
+        SetSimType( dest, x, y, centerType, SimPower_NoPower );
     }
     
     // Check with type
@@ -331,26 +363,28 @@ void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::
         case SimType_WireColor0:
         case SimType_WireColor1:
             
-            // For each directly-adjacent wire and joint
-            for( int i = 0; i < 4; i++ )
+            // For each directly-adjacent element, test if on
+            for( int i = 0; i < cDirectlyAdjacentOffsetCount; i++ )
             {
-                int index[ 2 ] =
-                {
-                    cDirectlyAdjacentOffsets[ i ][ 0 ],
-                    cDirectlyAdjacentOffsets[ i ][ 1 ],
-                };
+                const Vec2& adjacentOffset = cDirectlyAdjacentOffsets[ i ];
+                const SimPower& adjPower = powerGrid[ adjacentOffset.x ][ adjacentOffset.y ];
+                const SimType& adjType = nodeGrid[ adjacentOffset.x ][ adjacentOffset.y ];
                 
-                SimType adjSimType = nodeGrid[ index[ 0 ] ][ index[ 1 ] ];
-                int powerLevel = powerGrid[ index[ 0 ] ][ index[ 1 ] ];
-                
-                if( ( powerLevel == 0 ) && ( adjSimType == centerType || adjSimType == SimType_JumpJoint || adjSimType == SimType_MergeJoint ) )
+                if( adjType != SimType_None )
                 {
-                    SetSimType( dest, x + index[ 0 ] - 1, y + index[ 1 ] - 1, adjSimType, 3 ); // 3 is max power
+                    if( centerPower == SimPower_NoPower && ( adjPower == SimPower_Power || adjPower == SimPower_PowerSpreading ) )
+                    {
+                        SetSimType( dest, x, y, centerType, SimPower_PowerSpreading );
+                    }
+                    else if( centerPower == SimPower_Power && adjPower == SimPower_NoPowerSpreading )
+                    {
+                        SetSimType( dest, x, y, centerType, SimPower_NoPower );
+                    }
                 }
             }
             
             break;
-
+            /*
         case SimType_JumpJoint:
             
             // For each directly-adjacent to wires only
@@ -363,17 +397,15 @@ void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::
                 };
                 
                 SimType adjSimType = nodeGrid[ index[ 0 ] ][ index[ 1 ] ];
-                int powerLevel = powerGrid[ index[ 0 ] ][ index[ 1 ] ];
                 
-                if( ( powerLevel == 0 )
-                 && ( adjSimType != SimType_None ) )
+                if( adjSimType != SimType_None )
                 {
-                    SetSimType( dest, x + index[ 0 ] - 1, y + index[ 1 ] - 1, adjSimType, 3 ); // 3 is max power
+                    SetSimType( dest, x + index[ 0 ] - 1, y + index[ 1 ] - 1, adjSimType, powerLevel );
                 }
             }
             
             break;
-
+            
         case SimType_MergeJoint:
             
             // For each directly-adjacent to wires only
@@ -386,20 +418,18 @@ void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::
                 };
                 
                 SimType adjSimType = nodeGrid[ index[ 0 ] ][ index[ 1 ] ];
-                int powerLevel = powerGrid[ index[ 0 ] ][ index[ 1 ] ];
                 
-                if( ( powerLevel == 0 )
-                 && ( adjSimType != SimType_None ) )
+                if( adjSimType != SimType_None )
                 {
-                    SetSimType( dest, x + index[ 0 ] - 1, y + index[ 1 ] - 1, adjSimType, 3 ); // 3 is max power
+                    SetSimType( dest, x + index[ 0 ] - 1, y + index[ 1 ] - 1, adjSimType, powerLevel );
                 }
             }
             
             break;
-
+            
         case SimType_AndGate:
             
-            // For each teranary gate configuration
+            // For each ternary gate configuration
             for( int i = 0; i < 4; i++ )
             {
                 // Left to right
@@ -407,44 +437,43 @@ void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::
                 //SimType inputTypeB = nodeGrid[ cTernaryOffsets[ i ][ 1 ][ 0 ] ][ cTernaryOffsets[ i ][ 1 ][ 1 ] ];
                 SimType outputType = nodeGrid[ cTernaryOffsets[ i ][ 2 ][ 0 ] ][ cTernaryOffsets[ i ][ 2 ][ 1 ] ];
                 
-                int inputPowerA = powerGrid[ cTernaryOffsets[ i ][ 0 ][ 0 ] ][ cTernaryOffsets[ i ][ 0 ][ 1 ] ];
-                int inputPowerB = powerGrid[ cTernaryOffsets[ i ][ 1 ][ 0 ] ][ cTernaryOffsets[ i ][ 1 ][ 1 ] ];
-                int outputPower = powerGrid[ cTernaryOffsets[ i ][ 2 ][ 0 ] ][ cTernaryOffsets[ i ][ 2 ][ 1 ] ];
+                SimPower inputPowerA = powerGrid[ cTernaryOffsets[ i ][ 0 ][ 0 ] ][ cTernaryOffsets[ i ][ 0 ][ 1 ] ];
+                SimPower inputPowerB = powerGrid[ cTernaryOffsets[ i ][ 1 ][ 0 ] ][ cTernaryOffsets[ i ][ 1 ][ 1 ] ];
                 
-                if( outputPower == 0 && outputType != SimType_None && inputPowerA != 0 && inputPowerB != 0 )
+                if( ( outputType != SimType_None ) && ( inputPowerA == SimPower_Power && inputPowerB == SimPower_Power ) )
                 {
                     int tx = x + cTernaryOffsets[ i ][ 2 ][ 0 ] - 1;
                     int ty = y + cTernaryOffsets[ i ][ 2 ][ 1 ] - 1;
                     
-                    SetSimType( dest, tx, ty, outputType, 3 ); // 3 is max power
+                    SetSimType( dest, tx, ty, outputType, powerLevel );
                 }
             }
             
             break;
-
+            */
         case SimType_OrGate:
             break;
-
+            
         case SimType_XorGate:
             break;
-
+            
         case SimType_NotGate:
             break;
             
-        // Ignore these cases
+            // Ignore these cases
         case SimType_None:
         default:
             break;
     }
 }
 
-void WireSim::SetSimType( std::vector< SimColor >& dstImage, int x, int y, const SimType& simType, int powerLevel )
+void WireSim::SetSimType( std::vector< SimColor >& dstImage, int x, int y, const SimType& simType, SimPower powerLevel )
 {
     int linearIndex = GetLinearPosition( x, y );
     dstImage.at( linearIndex ) = MakeSimColor( simType, powerLevel );
 }
 
-WireSim::SimColor WireSim::MakeSimColor( const SimType& simType, int powerLevel )
+WireSim::SimColor WireSim::MakeSimColor( const SimType& simType, SimPower powerLevel )
 {
     return cSimColors[ simType ][ powerLevel ];
 }
