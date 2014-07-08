@@ -7,7 +7,7 @@
 
 #include <vector>
 
-#include "lodepng.h"
+#include "../lodepng.h"
 #include "Vec2.h"
 #include "WireSim.h"
 
@@ -370,6 +370,7 @@ void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::
                 const SimPower& adjPower = powerGrid[ adjacentOffset.x ][ adjacentOffset.y ];
                 const SimType& adjType = nodeGrid[ adjacentOffset.x ][ adjacentOffset.y ];
                 
+                // Don't spread
                 if( adjType != SimType_None )
                 {
                     if( centerPower == SimPower_NoPower && ( adjPower == SimPower_Power || adjPower == SimPower_PowerSpreading ) )
@@ -384,28 +385,51 @@ void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::
             }
             
             break;
-            /*
+            
         case SimType_JumpJoint:
             
-            // For each directly-adjacent to wires only
-            for( int i = 0; i < 4; i++ )
+            // Check source-to-dest connections, starting right-to-left, then bottom-to-up, left-to-right, then top-to-bottom
+            // Only applies it if the source is high and dest is low
+            for( int i = 0; i < cDirectlyAdjacentOffsetCount; i++ )
             {
-                int index[ 2 ] =
+                // Source
+                const Vec2& srcOffset = cDirectlyAdjacentOffsets[ i ];
+
+                const SimPower& srcPower = powerGrid[ srcOffset.x ][ srcOffset.y ];
+                const SimType& srcType = nodeGrid[ srcOffset.x ][ srcOffset.y ];
+
+                // Ignore if source isn't a type or isn't spreading
+                if( srcType == SimType_None || ( srcPower != SimPower_PowerSpreading && srcPower != SimPower_NoPowerSpreading ) )
                 {
-                    cDirectlyAdjacentOffsets[ i ][ 0 ],
-                    cDirectlyAdjacentOffsets[ i ][ 1 ],
-                };
-                
-                SimType adjSimType = nodeGrid[ index[ 0 ] ][ index[ 1 ] ];
-                
-                if( adjSimType != SimType_None )
+                    continue;
+                }
+
+                const Vec2& dstOffset = cDirectlyAdjacentOffsets[ ( i + 2 ) % cDirectlyAdjacentOffsetCount ];
+
+                const SimPower& dstPower = powerGrid[ dstOffset.x ][ dstOffset.y ];
+                const SimType& dstType = nodeGrid[ dstOffset.x ][ dstOffset.y ];
+
+                // Ignore if destination isn't a type or it's another jump joint, or ignore if the source has the same power state as the dest
+                if( dstType == SimType_None ||
+                    dstType == SimType_JumpJoint ||
+                    ( srcPower == SimPower_Power && ( dstPower == SimPower_Power || dstPower == SimPower_PowerSpreading ) ) ||
+                    ( srcPower == SimPower_NoPower && ( dstPower == SimPower_NoPower || dstPower == SimPower_NoPowerSpreading ) ) )
                 {
-                    SetSimType( dest, x + index[ 0 ] - 1, y + index[ 1 ] - 1, adjSimType, powerLevel );
+                    continue;
+                }
+
+                if( srcPower == SimPower_PowerSpreading )
+                {
+                    SetSimType( dest, x + dstOffset.x - 1, y + dstOffset.y - 1, dstType, SimPower_PowerSpreading );
+                }
+                else
+                {
+                    SetSimType( dest, x + dstOffset.x - 1, y + dstOffset.y - 1, dstType, SimPower_NoPowerSpreading );
                 }
             }
             
             break;
-            
+            /*
         case SimType_MergeJoint:
             
             // For each directly-adjacent to wires only
