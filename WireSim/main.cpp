@@ -51,7 +51,7 @@ int main()
     const int cPixelSize = 8;
     
     // All circuits to simulate
-    const int cPngFileNameCount = 1;//9;
+    const int cPngFileNameCount = 1;//14;
     const char* cPngFileNames[ cPngFileNameCount ] =
     {
         //"StraightWireGreen.png",
@@ -59,7 +59,12 @@ int main()
         //"StraightWires.png",
         //"WirePair_16Full.png",
         //"WirePair_128Full.png",
-        "JumpJointTests.png"
+        //"JumpJointTests.png",
+        //"MergeJointTests.png",
+        //"NotGateTests.png",
+        //"AndGateTests.png",
+        //"OrGateTests.png",
+        "XorGateTests.png",
         //"WireOverlap.png",
         //"Circuit_2To4Decoder_v2.png",
         //"Circuit_2To4Decoder_v3.png",
@@ -90,7 +95,7 @@ int main()
             
             sprintf( fileName, "%s_%03d.output.png", cPngFileNames[ i ], j );
             fflush( stdout );
-            wireSim.SaveState( fileName, cPixelSize );
+            wireSim.SaveState( fileName, cPixelSize, true );
             
             printf( " %0.1f%%", 100.0f * ( float(j + 1) / float( cMaxSimulationCount ) ) );
             

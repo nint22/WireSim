@@ -38,8 +38,8 @@ public:
     {
         SimType_None, // Any other color
         
-        SimType_WireColor0,
-        SimType_WireColor1,
+        SimType_WireType0,
+        SimType_WireType1,
         SimType_JumpJoint,
         SimType_MergeJoint,
         SimType_AndGate,
@@ -54,10 +54,10 @@ public:
     // Power types
     enum SimPower
     {
-        SimPower_NoPower = 0,
-        SimPower_NoPowerSpreading,
-        SimPower_Power,
-        SimPower_PowerSpreading,
+        SimPower_LowEdge = 0,
+        SimPower_FallingEdge,
+        SimPower_HighEdge,
+        SimPower_RisingEdge,
         
         // Must always be last!
         SimPowerCount
@@ -78,7 +78,8 @@ public:
     bool Update();
     
     // Save the current state of the PNG to the given filename; returns true on success, false on failure
-    bool SaveState( const char* pngOutFileName, int pixelSize = 1 );
+    // If highlightEdgeChanges is set to true, then we draw a box outline on any edge-rise or edge-fall tiles
+    bool SaveState( const char* pngOutFileName, int pixelSize = 1, bool highlightEdgeChanges = false );
     
     // Color type; ARGB format
     typedef uint32_t SimColor;

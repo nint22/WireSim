@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="LodePng">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="lodepng.cpp">
+      <Filter>LodePng</Filter>
+    </ClCompile>
+    <ClCompile Include="WireSim\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WireSim\WireSim.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="WireSim\WireSim.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lodepng.h">
+      <Filter>LodePng</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Circuit_2To4Decoder_v2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Circuit_2To4Decoder_v3.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="JumpJointTests.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="StraightWireGreen.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="StraightWireOrange.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="StraightWires.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="WireOverlap.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="WirePair_16Full.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="WirePair_128Full.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MergeJointTests.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="NotGateTests.png">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>
