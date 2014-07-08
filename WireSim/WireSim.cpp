@@ -429,28 +429,35 @@ void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::
             }
             
             break;
-            /*
+            
         case SimType_MergeJoint:
             
-            // For each directly-adjacent to wires only
-            for( int i = 0; i < 8; i++ )
+            // Check for any adjacent active edge, then push it out to all directly-adjacent
+            // conductive surfaces; if there is two or more active edges, then prefer an edge rise
+            int srcIndex = -1;
+            for( int i = 0; i < cDirectlyAdjacentOffsetCount; i++ )
             {
-                int index[ 2 ] =
-                {
-                    cAdjacentOffsets[ i ][ 0 ],
-                    cAdjacentOffsets[ i ][ 1 ],
-                };
+                // Source
+                const Vec2& srcOffset = cDirectlyAdjacentOffsets[ i ];
                 
-                SimType adjSimType = nodeGrid[ index[ 0 ] ][ index[ 1 ] ];
+                const SimPower& srcPower = powerGrid[ srcOffset.x ][ srcOffset.y ];
+                const SimType& srcType = nodeGrid[ srcOffset.x ][ srcOffset.y ];
                 
-                if( adjSimType != SimType_None )
+                // Ignore if destination isn't a type or it's another jump joint, or ignore if the source has the same power state as the dest
+                if( srcPower == SimPower_PowerSpreading && srcType != SimType_None )
                 {
-                    SetSimType( dest, x + index[ 0 ] - 1, y + index[ 1 ] - 1, adjSimType, powerLevel );
+                    srcIndex = i;
+                    break;
                 }
             }
             
-            break;
+            if( srcIndex >= 0 )
+            {
+                // Turn on all...
+            }
             
+            break;
+            /*
         case SimType_AndGate:
             
             // For each ternary gate configuration
