@@ -13,12 +13,18 @@
 		06C1D107195E96FC00B8BDE4 /* WireOverlap.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06C1D101195E96F000B8BDE4 /* WireOverlap.png */; };
 		06C1D108195E96FC00B8BDE4 /* WirePair_16Full.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06C1D102195E96F000B8BDE4 /* WirePair_16Full.png */; };
 		06C1D109195E96FC00B8BDE4 /* WirePair_128Full.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06C1D103195E96F000B8BDE4 /* WirePair_128Full.png */; };
-		06C1D112196A7B7000B8BDE4 /* JumpJointTests.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06C1D111196A7B6C00B8BDE4 /* JumpJointTests.png */; };
+		06C1D112196A7B7000B8BDE4 /* JumperTests.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06C1D111196A7B6C00B8BDE4 /* JumperTests.png */; };
 		06D8ED7B194EA4D600ACBD20 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06D8ED7A194EA4D600ACBD20 /* main.cpp */; };
 		06D8ED86194EA4F300ACBD20 /* lodepng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06D8ED84194EA4F300ACBD20 /* lodepng.cpp */; };
 		06D8ED8A194EA9E300ACBD20 /* Circuit_2To4Decoder_v3.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06D8ED88194EA53500ACBD20 /* Circuit_2To4Decoder_v3.png */; };
 		06D8ED8B194EA9E500ACBD20 /* Circuit_2To4Decoder_v2.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06D8ED89194EA53500ACBD20 /* Circuit_2To4Decoder_v2.png */; };
 		06D8ED8E19565DAE00ACBD20 /* WireSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06D8ED8C19565DAE00ACBD20 /* WireSim.cpp */; };
+		06FBA14E197384A7006D68CA /* TestManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06FBA14D197384A7006D68CA /* TestManager.cpp */; };
+		06FBA15219738B8E006D68CA /* AndGateTests.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06FBA14F19738B80006D68CA /* AndGateTests.png */; };
+		06FBA15319738B8E006D68CA /* OrGateTests.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06FBA15019738B80006D68CA /* OrGateTests.png */; };
+		06FBA15419738B8E006D68CA /* XorGateTests.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06FBA15119738B80006D68CA /* XorGateTests.png */; };
+		06FBA1571973A1D7006D68CA /* NotGateTests.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06FBA1551973A197006D68CA /* NotGateTests.png */; };
+		06FBA1581973A1D7006D68CA /* SolidWire.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 06FBA1561973A1AF006D68CA /* SolidWire.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,7 +34,12 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				06C1D112196A7B7000B8BDE4 /* JumpJointTests.png in CopyFiles */,
+				06FBA1571973A1D7006D68CA /* NotGateTests.png in CopyFiles */,
+				06FBA1581973A1D7006D68CA /* SolidWire.png in CopyFiles */,
+				06FBA15219738B8E006D68CA /* AndGateTests.png in CopyFiles */,
+				06FBA15319738B8E006D68CA /* OrGateTests.png in CopyFiles */,
+				06FBA15419738B8E006D68CA /* XorGateTests.png in CopyFiles */,
+				06C1D112196A7B7000B8BDE4 /* JumperTests.png in CopyFiles */,
 				06C1D106195E96FC00B8BDE4 /* StraightWires.png in CopyFiles */,
 				06C1D107195E96FC00B8BDE4 /* WireOverlap.png in CopyFiles */,
 				06C1D108195E96FC00B8BDE4 /* WirePair_16Full.png in CopyFiles */,
@@ -50,7 +61,8 @@
 		06C1D102195E96F000B8BDE4 /* WirePair_16Full.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WirePair_16Full.png; sourceTree = "<group>"; };
 		06C1D103195E96F000B8BDE4 /* WirePair_128Full.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WirePair_128Full.png; sourceTree = "<group>"; };
 		06C1D1101960F99A00B8BDE4 /* Vec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec2.h; sourceTree = "<group>"; };
-		06C1D111196A7B6C00B8BDE4 /* JumpJointTests.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = JumpJointTests.png; sourceTree = "<group>"; };
+		06C1D111196A7B6C00B8BDE4 /* JumperTests.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = JumperTests.png; sourceTree = "<group>"; };
+		06C1D1141971F2D400B8BDE4 /* UnitTests.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UnitTests.txt; sourceTree = "<group>"; };
 		06D8ED77194EA4D600ACBD20 /* WireSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WireSim; sourceTree = BUILT_PRODUCTS_DIR; };
 		06D8ED7A194EA4D600ACBD20 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		06D8ED84194EA4F300ACBD20 /* lodepng.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lodepng.cpp; sourceTree = "<group>"; };
@@ -59,6 +71,13 @@
 		06D8ED89194EA53500ACBD20 /* Circuit_2To4Decoder_v2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Circuit_2To4Decoder_v2.png; sourceTree = "<group>"; };
 		06D8ED8C19565DAE00ACBD20 /* WireSim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WireSim.cpp; sourceTree = "<group>"; };
 		06D8ED8D19565DAE00ACBD20 /* WireSim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireSim.h; sourceTree = "<group>"; };
+		06FBA14C1973849F006D68CA /* TestManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestManager.h; sourceTree = "<group>"; };
+		06FBA14D197384A7006D68CA /* TestManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestManager.cpp; sourceTree = "<group>"; };
+		06FBA14F19738B80006D68CA /* AndGateTests.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AndGateTests.png; sourceTree = "<group>"; };
+		06FBA15019738B80006D68CA /* OrGateTests.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrGateTests.png; sourceTree = "<group>"; };
+		06FBA15119738B80006D68CA /* XorGateTests.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = XorGateTests.png; sourceTree = "<group>"; };
+		06FBA1551973A197006D68CA /* NotGateTests.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NotGateTests.png; sourceTree = "<group>"; };
+		06FBA1561973A1AF006D68CA /* SolidWire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SolidWire.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +91,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06C1D1131971EE8200B8BDE4 /* Elements of Computer System */ = {
+			isa = PBXGroup;
+			children = (
+				06C1D1141971F2D400B8BDE4 /* UnitTests.txt */,
+			);
+			name = "Elements of Computer System";
+			sourceTree = "<group>";
+		};
 		06D8ED6E194EA4D600ACBD20 = {
 			isa = PBXGroup;
 			children = (
@@ -93,8 +120,10 @@
 		06D8ED79194EA4D600ACBD20 /* WireSim */ = {
 			isa = PBXGroup;
 			children = (
-				06D8ED8C19565DAE00ACBD20 /* WireSim.cpp */,
 				06D8ED8D19565DAE00ACBD20 /* WireSim.h */,
+				06D8ED8C19565DAE00ACBD20 /* WireSim.cpp */,
+				06FBA14C1973849F006D68CA /* TestManager.h */,
+				06FBA14D197384A7006D68CA /* TestManager.cpp */,
 				06C1D1101960F99A00B8BDE4 /* Vec2.h */,
 				06D8ED7A194EA4D600ACBD20 /* main.cpp */,
 			);
@@ -113,7 +142,13 @@
 		06D8ED87194EA51100ACBD20 /* Circuits */ = {
 			isa = PBXGroup;
 			children = (
-				06C1D111196A7B6C00B8BDE4 /* JumpJointTests.png */,
+				06C1D1131971EE8200B8BDE4 /* Elements of Computer System */,
+				06FBA14F19738B80006D68CA /* AndGateTests.png */,
+				06FBA15019738B80006D68CA /* OrGateTests.png */,
+				06FBA15119738B80006D68CA /* XorGateTests.png */,
+				06FBA1551973A197006D68CA /* NotGateTests.png */,
+				06FBA1561973A1AF006D68CA /* SolidWire.png */,
+				06C1D111196A7B6C00B8BDE4 /* JumperTests.png */,
 				06C1D0FE195E96F000B8BDE4 /* StraightWireGreen.png */,
 				06C1D0FF195E96F000B8BDE4 /* StraightWireOrange.png */,
 				06C1D100195E96F000B8BDE4 /* StraightWires.png */,
@@ -180,6 +215,7 @@
 				06D8ED7B194EA4D600ACBD20 /* main.cpp in Sources */,
 				06D8ED8E19565DAE00ACBD20 /* WireSim.cpp in Sources */,
 				06D8ED86194EA4F300ACBD20 /* lodepng.cpp in Sources */,
+				06FBA14E197384A7006D68CA /* TestManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

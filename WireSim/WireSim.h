@@ -5,16 +5,27 @@
 
  Implements a WireSim simulation on the CPU. WireSim is a finite-state
  automaton that can be draw out in an image, using the Tango Icon Theme
- color template (see below of node definitions). These nodes are placed
+ color template (see below for node definitions). These nodes are placed
  into a simple :
  
- Yellow: Wire, loses one degree of power (up to 3) and moves directly-adjacent to like-wire
- Green: Wire, loses one degree of power (up to 3) and moves directly-adjacent to like-wire
- Brown: Wire-Joint, where power is moved top-over-bottom, and left-over-right, no color importance
- Orange: Wire-Joint, combines all neighbors
+ Every element has an input and output pattern; wire-types recieve on
+ directly adjacent-tiles and transmit back to directly-adjacent tiles.
+ The Jumper moves from one side to the direct other, while gates operate
+ on a Y-like input. Note that all entities only read / write from wires,
+ so you can't chain any gate into a line.
+ 
+ Orange: Wire 0
+    Shares incoming signal changes
+ Green: Wire 1
+    Same as Wire 0, but does not share a signal with it
+ Brown: Jumper
+    Moves signals top-down, bottom-up, left-right, and
+    right-left; can transmit across wire types.
  Red: And-Gate
+    Accepts from any or all corners, transmitting to all
+    directly-adjacent tiles.
  Blue: Or-Gate
- Grey: Xor-Gate
+ Yellow: Xor-Gate
  Purple: Not-Gate
  
  ***/
@@ -36,31 +47,30 @@ public:
     // All types
     enum SimType
     {
-        SimType_None, // Any other color
+        cSimType_None, // Any other color
         
-        SimType_WireType0,
-        SimType_WireType1,
-        SimType_JumpJoint,
-        SimType_MergeJoint,
-        SimType_AndGate,
-        SimType_OrGate,
-        SimType_XorGate,
-        SimType_NotGate,
+        cSimType_WireType0,
+        cSimType_WireType1,
+        cSimType_JumpJoint,
+        cSimType_AndGate,
+        cSimType_OrGate,
+        cSimType_XorGate,
+        cSimType_NotGate,
         
         // Must always be last!
-        SimTypeCount
+        cSimTypeCount
     };
     
     // Power types
     enum SimPower
     {
-        SimPower_LowEdge = 0,
-        SimPower_FallingEdge,
-        SimPower_HighEdge,
-        SimPower_RisingEdge,
+        cSimPower_LowEdge = 0,
+        cSimPower_FallingEdge,
+        cSimPower_HighEdge,
+        cSimPower_RisingEdge,
         
         // Must always be last!
-        SimPowerCount
+        cSimPowerCount
     };
     
     // Get size of the image
@@ -105,6 +115,12 @@ protected:
     
     // Create color with the appropriate tint (based on power level)
     SimColor MakeSimColor( const SimType& simType, SimPower powerLevel );
+    
+    // Fast inline filters
+    inline bool IsEdge( const SimPower& simPower ) const;
+    inline bool IsSettled( const SimPower& simPower ) const;
+    inline bool IsWire( const SimType& simType ) const;
+    inline bool IsGate( const SimType& simType ) const;
     
 private:
     

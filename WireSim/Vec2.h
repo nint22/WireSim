@@ -10,7 +10,8 @@
 
 #ifndef __VEC2_H__
 #define __VEC2_H__
-#pragma once
+
+#include <vector>
 
 class Vec2
 {

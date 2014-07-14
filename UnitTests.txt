@@ -1,0 +1,29 @@
+# The image we're testing; simple and-gate
+UnitTests.png
+
+# Test simple gates:
+# 1. Set the first two pins to low
+set 0 0
+set 1 0
+
+# 2. Keep simulating until output steady-state; draws output state change as edge diagram
+eval
+
+# 3. Assert that the single output pin 0 is low
+test 0 0
+
+# Repeat this test for the three other input states
+set 0 1
+set 1 0
+eval
+test 0 0
+
+set 0 0
+set 1 1
+eval
+test 0 0
+
+set 0 1
+set 1 1
+eval
+test 0 1
