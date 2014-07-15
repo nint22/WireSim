@@ -370,45 +370,50 @@ void WireSim::Update( int x, int y, const std::vector< SimColor >& source, std::
         case cSimType_JumpJoint:
         case cSimType_NotGate:
             {
-                // Check source-to-dest connections, starting right-to-left, then bottom-to-up, left-to-right, then top-to-bottom
-                // Only applies it if the source is high and dest is low
-                for( int i = 0; i < cDirectlyAdjacentOffsetCount; i++ )
+                // Not-gates are and jump-gates are the only directional gates that only move either
+                // top-down/left-right OR down-top/right-left based on their off/on state, e.g. a light purple means it is on,
+                // which means it is a not-gate that operates down-top/right-left, while a dark brown means it is off, so the gate
+                // operators on top-down/left-right. Also note that state-transfer only happens on settled inputs and outputs
+                int powerOffset = ( centerPower == cSimPower_LowEdge ) ? 2 : 0;
+                for( int i = 0; i < 2; i++ )
                 {
-                    const Vec2& sourceOffset = cDirectlyAdjacentOffsets[ i ];
+                    int sourceIndex = powerOffset + i;
+                    const Vec2& sourceOffset = cDirectlyAdjacentOffsets[ sourceIndex ];
 
                     // Get input details
                     const SimPower& sourcePower = powerGrid[ sourceOffset.x ][ sourceOffset.y ];
                     const SimType& sourceType = nodeGrid[ sourceOffset.x ][ sourceOffset.y ];
 
-                    // Save input state
-                    SimPower resultPower = cSimPower_LowEdge;
-                    if( IsWire( sourceType ) && sourcePower == cSimPower_HighEdge )
-                    {
-                        resultPower = cSimPower_HighEdge;
-                    }
-                    // Else, not stable input, ignore...
-                    else
+                    // Save input state; ignore if not settled
+                    SimPower resultPower = sourcePower;
+                    if( !IsWire( sourceType ) || !IsSettled( sourcePower ) )
                     {
                         continue;
                     }
-                    
+
+                    // Flip if not-gate
+                    if( centerType == cSimType_NotGate )
+                    {
+                        resultPower = ( resultPower == cSimPower_LowEdge ) ? cSimPower_HighEdge : cSimPower_LowEdge;
+                    }
+
                     // Only apply onto directly opposite edges
-                    const Vec2& outputPos = cDirectlyAdjacentOffsets[ ( i + 2 ) % cDirectlyAdjacentOffsetCount ];
+                    const Vec2& outputPos = cDirectlyAdjacentOffsets[ ( sourceIndex + 2 ) % cDirectlyAdjacentOffsetCount ];
                     
                     // Get type and power
                     const SimType& outputType = nodeGrid[ outputPos.x ][ outputPos.y ];
                     const SimPower& outputPower = powerGrid[ outputPos.x ][ outputPos.y ];
                     
-                    // Set input state only if there is a state change
+                    // Set output state only if there is a difference
                     if( IsWire( outputType ) && IsSettled( outputPower ) && outputPower != resultPower )
                     {
-                        SetSimType( dest, x + outputPos.x - 1, y + outputPos.y - 1, outputType, ( resultPower == cSimPower_HighEdge ) ? cSimPower_RisingEdge : cSimPower_FallingEdge );
+                        SimPower newEdgePower = ( resultPower == cSimPower_LowEdge ) ? cSimPower_FallingEdge : cSimPower_RisingEdge;
+                        SetSimType( dest, x + outputPos.x - 1, y + outputPos.y - 1, outputType, newEdgePower );
                     }
-                    
                 }
             }
             break;
-            
+
         case cSimType_AndGate:
         case cSimType_OrGate:
         case cSimType_XorGate:
